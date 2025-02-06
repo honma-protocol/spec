@@ -5,7 +5,7 @@ Status: Draft
 
 ## Introduction
 
-HONMA est un protocole applicatif pour les interfaces de communication Web s'appuyant sur HTTP et RINKEI.
+HONMA est un protocole applicatif pour les interfaces de communication Web s'appuyant sur HTTP et EWLP.
 
 ## Ressources
 
@@ -25,7 +25,7 @@ Chaque ressource membre doit inclure :
 
 ## Navigation
 
-Les relations entre ressources sont exprimées via l'en-tête `Link`. Conformément à RINKEI, chaque lien doit inclure :
+Les relations entre ressources sont exprimées via l'en-tête `Link`. Conformément à EWLP, chaque lien doit inclure :
 - URI de référence
 - `rel` : type de relation
 - `title` : libellé
@@ -43,4 +43,4 @@ Le verbe `OPTIONS` expose la structure d'une ressource :
 
 - RFC 7231 (HTTP/1.1)
 - RFC 8288 (Web Linking)
-- RINKEI 1.0
+- EWLP 1.0

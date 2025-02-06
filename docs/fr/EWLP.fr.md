@@ -1,4 +1,4 @@
-# RINKEI (輪系) - Resource Identification & Naming for Knowledge Exchange & Interoperability
+# EWLP (Extended Web Linking Protocol)
 
 Version: 1.0-draft
 Status: Draft
@@ -9,7 +9,7 @@ Cette spécification étend le modèle Web Linking défini dans la RFC 8288 en i
 
 ## 1. Introduction
 
-Dans les architectures REST, une même ressource peut être identifiée par plusieurs URI. Bien que cette flexibilité soit précieuse, elle peut créer une ambiguïté lors de la détermination de l'équivalence entre deux URI. RINKEI introduit une méthode standardisée pour fournir une identification canonique des ressources via les en-têtes HTTP Link.
+Dans les architectures REST, une même ressource peut être identifiée par plusieurs URI. Bien que cette flexibilité soit précieuse, elle peut créer une ambiguïté lors de la détermination de l'équivalence entre deux URI. EWLP introduit une méthode standardisée pour fournir une identification canonique des ressources via les en-têtes HTTP Link.
 
 ## 2. Terminologie
 
