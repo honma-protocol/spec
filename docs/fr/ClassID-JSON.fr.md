@@ -15,7 +15,8 @@ Un objet JSON augmenté contient :
 
 1. `class` est de type `string`
 2. `id` est de type `string`
-3. La combinaison {`id`, `class`} doit être unique globalement
+3. La combinaison {`id`, `class`} identifie une ressource unique
+4. Plusieurs objets peuvent partager la même combinaison {`id`, `class`} s'ils représentent la même ressource
 
 ## 4. Exemples
 
@@ -29,7 +30,7 @@ Un objet JSON augmenté contient :
 }
 ```
 
-### 4.2 Document avec objets augmentés et non augmentés
+### 4.2 Objets multiples pour la même ressource
 
 ```json
 {
@@ -37,12 +38,14 @@ Un objet JSON augmenté contient :
     "articles": [
         {
             "class": "article",
-            "id": "1",
-            "title": "Premier article"
+            "id": "42",
+            "title": "Mon Article"
         }
     ],
-    "metadata": {
-        "page": 1
+    "latest": {
+        "class": "article",
+        "id": "42",
+        "title": "Mon Article"
     }
 }
 ```
