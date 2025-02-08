@@ -9,20 +9,14 @@
 ## Structure des ressources
 
 - Utiliser des collections et des membres
-- Garder les ressources plates
-- Préférer les liens aux imbrications
 
 ## Identification
 
-- Choisir des noms de classes au pluriel
-- Utiliser des identifiants stables et uniques
 - Fournir une URI canonique par ressource
 
 ## Représentation
 
-- Privilégier JSON
 - Utiliser des attributs simples
-- Nommer en français
 
 ## Cache
 
