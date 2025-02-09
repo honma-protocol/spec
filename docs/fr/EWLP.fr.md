@@ -25,8 +25,15 @@ Un ensemble de ressources membres partageant une ou plusieurs classes communes.
 1. Tous les liens vers une ressource DOIVENT inclure un attribut `class`
 2. Les liens vers une collection NE DOIVENT PAS inclure d'attribut `id`
 3. Les liens vers un membre DOIVENT inclure un attribut `id`
-4. Les attributs `class` et `id` NE DOIVENT PAS contenir de valeur vide ni d'espaces en début ou fin de valeur
-5. Une collection contenant des membres de classes différentes DOIT déclarer toutes ces classes dans son attribut `class`, séparées par des espaces
+4. L'attribut `class` DOIT suivre les règles suivantes :
+   - Une ou plusieurs classes séparées par des espaces
+   - Chaque classe doit être un token valide selon les règles HTML
+   - Les espaces en début et fin sont ignorés
+   - Les espaces multiples sont normalisés en un seul espace
+5. L'attribut `id` DOIT suivre les règles suivantes :
+   - Un seul token valide selon les règles HTML
+   - Les espaces en début et fin sont ignorés
+6. Une collection contenant des membres de classes différentes DOIT déclarer toutes ces classes dans son attribut `class`
 
 ## 4. Exemples
 
@@ -50,6 +57,15 @@ Link: </feed>; rel="collection"; class="article comment"; title="Fil d'actualit�
 Link: </articles/42>; rel="canonical"; class="article"; id="42"; title="Mon Article"
 ```
 
+### 4.4 Normalisation des espaces
+
+```http
+# Ces liens sont équivalents après normalisation
+Link: </feed>; class="article   comment"; id="42"
+Link: </feed>; class=" article comment "; id="42"
+Link: </feed>; class="article comment"; id="42"
+```
+
 ## 5. Cas invalides
 
 ### 5.1 Collection avec id
@@ -64,16 +80,7 @@ Link: </articles>; rel="collection"; class="article"; id="main"  # Invalide : un
 Link: </articles/42>; rel="item"; class="article"  # Invalide : un membre doit avoir un id
 ```
 
-### 5.3 Espaces invalides dans les valeurs
-
-```http
-Link: </resource>; class=" article"; id="42"    # Invalide : espace au début de class
-Link: </resource>; class="article "; id="42"    # Invalide : espace à la fin de class
-Link: </resource>; class="article"; id=" 42"    # Invalide : espace au début de id
-Link: </resource>; class="article"; id="42 "    # Invalide : espace à la fin de id
-```
-
-### 5.4 Collection hétérogène mal définie
+### 5.3 Collection hétérogène mal définie
 
 ```http
 Link: </feed>; rel="collection"; class="article"; title="Feed",  # Invalide : la collection ne déclare pas toutes les classes de ses membres
