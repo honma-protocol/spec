@@ -2,66 +2,126 @@
 
 ## 1. Introduction
 
-Dans une architecture REST, une même ressource peut être identifiée par différentes URIs, chacune représentant une perspective particulière de cette ressource. Par exemple, un article peut être identifié directement via `/articles/42` ou dans le contexte d'un commentaire via `/comments/123/article`. Cette multiplicité des identifiants, bien que valide, crée une ambiguïté pour les clients qui doivent déterminer si différentes URIs identifient la même ressource.
+Dans une architecture REST, une même ressource peut être identifiée par différentes URIs, chacune représentant une perspective particulière de cette ressource. Cette multiplicité des identifiants crée une ambiguïté pour les clients qui doivent déterminer si différentes URIs identifient la même ressource.
 
-EWLP résout cette ambiguïté en étendant le protocole Web Linking (RFC 8288) avec les attributs `class` et `id`. La combinaison de ces attributs fournit un identifiant stable de la ressource, indépendant des URIs qui deviennent alors des identifiants contextuels. Cette approche permet aux clients de reconnaître une même ressource à travers différents contextes d'identification, tout en maintenant le principe REST d'opacité des URIs.
+EWLP résout cette ambiguïté en étendant le protocole Web Linking (RFC 8288) avec les attributs `class` et `id`. La combinaison de ces attributs fournit un identifiant stable de la ressource, indépendant des URIs qui deviennent alors des identifiants contextuels.
 
-## 2. Structure
+## 2. Définitions
 
-Un lien EWLP peut identifier aussi bien une ressource individuelle qu'une collection. Il peut inclure deux attributs additionnels :
+### Ressource
 
-- `class` de type `string` : identifie le type de la ressource. Plusieurs valeurs possibles.
-- `id` de type `string` : identifie de manière unique une ressource (membre ou collection) au sein de sa classe. Une seule valeur possible.
+Une entité identifiable accessible via une ou plusieurs URIs. Une ressource peut être soit un membre, soit une collection.
 
-Une ressource peut être :
+### Membre
 
-- Un membre : ressource individuelle (ex: un article spécifique)
-- Une collection : ensemble de ressources qui peuvent être de natures différentes (ex: un flux d'activités contenant des articles et des commentaires)
+Une ressource individuelle représentant une entité unique (ex: un article spécifique, un commentaire).
+
+### Collection
+
+Un ensemble de ressources membres partageant une ou plusieurs classes communes.
 
 ## 3. Contraintes
 
-1. Les attributs `class` et `id` sont optionnels
-2. L'attribut `class` est requis uniquement en cas d'ambiguïté (de collision) sur l'`id`
-3. Deux liens partageant le même `id` et la même `class` identifient la même ressource
-4. Une collection peut avoir un `id` tout comme un membre
-5. Les membres d'une collection peuvent avoir des `class` différentes
+1. Tous les liens vers une ressource DOIVENT inclure un attribut `class`
+2. Les liens vers une collection NE DOIVENT PAS inclure d'attribut `id`
+3. Les liens vers un membre DOIVENT inclure un attribut `id`
+4. Les attributs `class` et `id` NE DOIVENT PAS contenir de valeur vide ni d'espaces en début ou fin de valeur
+5. Une collection contenant des membres de classes différentes DOIT déclarer toutes ces classes dans son attribut `class`, séparées par des espaces
 
 ## 4. Exemples
 
-### 4.1 Lien vers une collection homogène
+### 4.1 Collection homogène
 
 ```http
-Link: </articles>; rel="collection"; class="articles"; id="main"
+Link: </articles>; rel="collection"; class="article"; title="Articles"
 ```
 
-### 4.2 Lien vers une collection hétérogène
+### 4.2 Collection hétérogène
 
 ```http
-Link: </feed>; rel="collection"; class="article comment"; id="1739085677"; title="Timeline",
+Link: </feed>; rel="collection"; class="article comment"; title="Fil d'actualité",
       </feed/1>; rel="item"; class="article"; id="42"; title="Article #42",
       </feed/2>; rel="item"; class="comment"; id="17"; title="Commentaire #17"
 ```
 
-### 4.3 Lien vers un membre
+### 4.3 Membre
 
 ```http
-Link: </articles/42>; rel="canonical"; class="article"; id="42"; title="Article #42"
+Link: </articles/42>; rel="canonical"; class="article"; id="42"; title="Mon Article"
 ```
 
-### 4.4 Lien non-ressource
+## 5. Cas invalides
+
+### 5.1 Collection avec id
 
 ```http
-Link: </css/main.css>; rel="stylesheet"
+Link: </articles>; rel="collection"; class="article"; id="main"  # Invalide : une collection ne doit pas avoir d'id
 ```
 
-### 4.5 Liens multiples vers la même ressource
+### 5.2 Membre sans id
 
 ```http
-Link: </articles/42>; rel="canonical"; class="article"; id="42"; title="Article #42",
-      </comments/123/article>; rel="item"; class="article"; id="42"; title="Article commenté"
+Link: </articles/42>; rel="item"; class="article"  # Invalide : un membre doit avoir un id
 ```
 
-Dans cet exemple, les deux liens identifient la même ressource (l'article numéro 42). Chaque URI offre une perspective différente sur cette ressource :
+### 5.3 Espaces invalides dans les valeurs
 
-- Via la collection des articles
-- Dans le contexte d'un commentaire
+```http
+Link: </resource>; class=" article"; id="42"    # Invalide : espace au début de class
+Link: </resource>; class="article "; id="42"    # Invalide : espace à la fin de class
+Link: </resource>; class="article"; id=" 42"    # Invalide : espace au début de id
+Link: </resource>; class="article"; id="42 "    # Invalide : espace à la fin de id
+```
+
+### 5.4 Collection hétérogène mal définie
+
+```http
+Link: </feed>; rel="collection"; class="article"; title="Feed",  # Invalide : la collection ne déclare pas toutes les classes de ses membres
+      </feed/1>; rel="item"; class="article"; id="42",
+      </feed/2>; rel="item"; class="comment"; id="17"
+```
+
+## 6. Diagramme des relations
+
+```mermaid
+graph TD
+    A[Collection] -->|contient| B[Membres]
+    A -->|DOIT avoir| C[class]
+    A -->|NE DOIT PAS avoir| D[id]
+    B -->|DOIT avoir| E[class]
+    B -->|DOIT avoir| F[id]
+    G[Collection hétérogène] -->|DOIT déclarer| H[Toutes les classes des membres]
+```
+
+## 7. Exemple complet d'interaction
+
+### Requête
+
+```http
+GET /feed HTTP/1.1
+Accept: application/json
+```
+
+### Réponse
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Link: </feed>; rel="self"; class="article comment"; title="Fil d'actualité",
+      </feed?page=2>; rel="next"; class="article comment"; title="Page suivante",
+      </articles/42>; rel="item"; class="article"; id="42"; title="Article #42",
+      </comments/17>; rel="item"; class="comment"; id="17"; title="Commentaire #17"
+
+[
+  {
+    "id": "42",
+    "type": "article",
+    "title": "Mon article"
+  },
+  {
+    "id": "17",
+    "type": "comment",
+    "content": "Mon commentaire"
+  }
+]
+```
