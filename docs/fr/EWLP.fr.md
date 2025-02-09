@@ -14,6 +14,7 @@ Un lien EWLP peut identifier aussi bien une ressource individuelle qu'une collec
 - `id` de type `string` : identifie de manière unique une ressource (membre ou collection) au sein de sa classe. Une seule valeur possible.
 
 Une ressource peut être :
+
 - Un membre : ressource individuelle (ex: un article spécifique)
 - Une collection : ensemble de ressources qui peuvent être de natures différentes (ex: un flux d'activités contenant des articles et des commentaires)
 
@@ -36,9 +37,9 @@ Link: </articles>; rel="collection"; class="articles"; id="main"
 ### 4.2 Lien vers une collection hétérogène
 
 ```http
-Link: </feed>; rel="collection"; class="feed"; id="user-activity",
-      </feed/1>; rel="item"; class="article"; id="42"; title="Nouvel article",
-      </feed/2>; rel="item"; class="comment"; id="17"; title="Commentaire récent"
+Link: </feed>; rel="collection"; class="article comment"; id="1739085677"; title="Timeline",
+      </feed/1>; rel="item"; class="article"; id="42"; title="Article #42",
+      </feed/2>; rel="item"; class="comment"; id="17"; title="Commentaire #17"
 ```
 
 ### 4.3 Lien vers un membre
@@ -61,11 +62,6 @@ Link: </articles/42>; rel="canonical"; class="article"; id="42"; title="Article 
 ```
 
 Dans cet exemple, les deux liens identifient la même ressource (l'article numéro 42). Chaque URI offre une perspective différente sur cette ressource :
+
 - Via la collection des articles
 - Dans le contexte d'un commentaire
-
-### 4.6 Ressource avec classes multiples
-
-```http
-Link: </blog/42>; rel="item"; class="feed article"; id="42"
-```
