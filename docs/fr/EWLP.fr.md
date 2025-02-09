@@ -26,12 +26,17 @@ Un ensemble de ressources membres partageant une ou plusieurs classes communes.
 2. Les liens vers une collection NE DOIVENT PAS inclure d'attribut `id`
 3. Les liens vers un membre DOIVENT inclure un attribut `id`
 4. L'attribut `class` DOIT suivre les règles suivantes :
-   - Une ou plusieurs classes séparées par des espaces
-   - Chaque classe doit être un token valide selon les règles HTML
-   - Les espaces en début et fin sont ignorés
-   - Les espaces multiples sont normalisés en un seul espace
+   - Pour une collection :
+     - Une ou plusieurs classes séparées par des espaces
+     - Chaque classe doit être un token valide
+   - Pour un membre :
+     - Une seule classe (pas d'espace autorisé)
+     - La classe doit être un token valide
+   - Dans tous les cas :
+     - Les espaces en début et fin sont ignorés
+     - Les espaces multiples sont normalisés en un seul espace
 5. L'attribut `id` DOIT suivre les règles suivantes :
-   - Un seul token valide selon les règles HTML
+   - Un seul token valide
    - Les espaces en début et fin sont ignorés
 6. Une collection contenant des membres de classes différentes DOIT déclarer toutes ces classes dans son attribut `class`
 
@@ -57,7 +62,7 @@ Link: </feed>; rel="collection"; class="article comment"; title="Fil d'actualit�
 Link: </articles/42>; rel="canonical"; class="article"; id="42"; title="Mon Article"
 ```
 
-### 4.4 Normalisation des espaces
+### 4.4 Normalisation des espaces (pour les collections)
 
 ```http
 # Ces liens sont équivalents après normalisation
@@ -80,7 +85,13 @@ Link: </articles>; rel="collection"; class="article"; id="main"  # Invalide : un
 Link: </articles/42>; rel="item"; class="article"  # Invalide : un membre doit avoir un id
 ```
 
-### 5.3 Collection hétérogène mal définie
+### 5.3 Membre avec plusieurs classes
+
+```http
+Link: </articles/42>; rel="item"; class="article blog"; id="42"  # Invalide : un membre ne peut avoir qu'une seule classe
+```
+
+### 5.4 Collection hétérogène mal définie
 
 ```http
 Link: </feed>; rel="collection"; class="article"; title="Feed",  # Invalide : la collection ne déclare pas toutes les classes de ses membres
@@ -93,9 +104,9 @@ Link: </feed>; rel="collection"; class="article"; title="Feed",  # Invalide : la
 ```mermaid
 graph TD
     A[Collection] -->|contient| B[Membres]
-    A -->|DOIT avoir| C[class]
+    A -->|DOIT avoir| C[class<br>une ou plusieurs]
     A -->|NE DOIT PAS avoir| D[id]
-    B -->|DOIT avoir| E[class]
+    B -->|DOIT avoir| E[class<br>une seule]
     B -->|DOIT avoir| F[id]
     G[Collection hétérogène] -->|DOIT déclarer| H[Toutes les classes des membres]
 ```
@@ -122,12 +133,12 @@ Link: </feed>; rel="self"; class="article comment"; title="Fil d'actualité",
 [
   {
     "id": "42",
-    "type": "article",
+    "class": "article",
     "title": "Mon article"
   },
   {
     "id": "17",
-    "type": "comment",
+    "class": "comment",
     "content": "Mon commentaire"
   }
 ]
