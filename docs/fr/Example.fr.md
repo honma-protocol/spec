@@ -62,6 +62,40 @@ Link: </articles/42/commentaires>; rel="collection"; class="commentaires"; title
 Link: </articles>; rel="up"; class="articles"; title="Articles"
 ```
 
+### Collection hétérogène avec normalisation des espaces
+
+```http
+GET /feed
+Accept: application/json
+```
+
+```json
+[
+  {
+    "id": "42",
+    "class": "article",
+    "titre": "Introduction à HONMA"
+  },
+  {
+    "id": "17",
+    "class": "commentaire",
+    "contenu": "Excellent article !"
+  }
+]
+```
+
+```http
+# Ces trois en-têtes sont équivalents après normalisation des espaces
+Link: </feed>; rel="self"; class="article   commentaire"; title="Fil d'actualité"
+Link: </feed>; rel="self"; class=" article commentaire "; title="Fil d'actualité"
+Link: </feed>; rel="self"; class="article commentaire"; title="Fil d'actualité"
+
+# Le reste des liens de la réponse
+Link: </articles/42>; rel="item"; class="article"; id="42"; title="Introduction à HONMA"
+Link: </commentaires/17>; rel="item"; class="commentaire"; id="17"; title="Excellent article !"
+Link: </feed?page=2>; rel="next"; class="article commentaire"; title="Page suivante"
+```
+
 ## Métadonnées et structure
 
 ```http
