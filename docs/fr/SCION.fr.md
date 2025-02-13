@@ -3,7 +3,7 @@
 
 ## 1. Définition
 
-SCION est une extension de JSON permettant d'identifier et de catégoriser des ressources via les attributs `class` et `id`.
+SCION est une extension de JSON permettant d'identifier et de catégoriser des ressources via les attributs `class` et `id`. Ce protocole se concentre uniquement sur l'identification des ressources, laissant la navigation et les liens à d'autres protocoles comme EWLP.
 
 ## 2. Types de Ressources
 
@@ -50,12 +50,14 @@ Un membre DOIT contenir :
         {
             "class": "article",
             "id": "42",
-            "title": "Premier Article"
+            "title": "First Article",
+            "summary": "An interesting article..."
         },
         {
             "class": "article",
             "id": "57",
-            "title": "Second Article"
+            "title": "Second Article",
+            "summary": "Another fascinating article..."
         }
     ]
 }
@@ -70,12 +72,14 @@ Un membre DOIT contenir :
         {
             "class": "article",
             "id": "42",
-            "title": "Un Article"
+            "title": "An Article",
+            "summary": "Article content..."
         },
         {
             "class": "comment",
             "id": "17",
-            "content": "Un Commentaire"
+            "content": "A Comment",
+            "date": "2024-02-13"
         }
     ]
 }
@@ -87,7 +91,8 @@ Un membre DOIT contenir :
 {
     "class": "article",
     "id": "42",
-    "title": "Mon Article",
+    "title": "My Article",
+    "content": "The article content...",
     "author": {
         "class": "user",
         "id": "15"
@@ -98,7 +103,8 @@ Un membre DOIT contenir :
             {
                 "class": "comment",
                 "id": "17",
-                "content": "Premier commentaire"
+                "content": "First comment",
+                "date": "2024-02-13"
             }
         ]
     }
