@@ -2,77 +2,104 @@
 
 ## 1. Définition
 
-ClassID-JSON est une extension de JSON permettant d'augmenter un objet avec les attributs `class` et `id`.
+ClassID-JSON est une extension de JSON permettant d'identifier et de catégoriser des ressources via les attributs `class` et `id`.
 
-## 2. Structure
+## 2. Types de Ressources
 
-Un objet JSON augmenté contient :
+### 2.1 Collection
 
-- Un attribut `class` (obligatoire)
-- Un attribut `id` (optionnel)
+Une ressource regroupant zéro, un ou plusieurs membres. Une collection peut contenir :
+- Des membres d'une même classe (collection homogène)
+- Des membres de classes différentes (collection hétérogène)
 
-## 3. Contraintes
+### 2.2 Membre
 
-1. `class` est de type `string` et DOIT suivre les règles suivantes :
-   - Une ou plusieurs classes séparées par des espaces
-   - Chaque classe doit être un token valide selon les règles HTML
-   - Les espaces en début et fin sont ignorés
-   - Les espaces multiples sont normalisés en un seul espace
+Une ressource individuelle appartenant à une classe spécifique.
 
-2. `id` est de type `string` et DOIT suivre les règles suivantes :
-   - Un seul token valide selon les règles HTML
-   - Les espaces en début et fin sont ignorés
+## 3. Structure
 
-3. La combinaison {`id`, `class`} identifie une ressource unique
+### 3.1 Collections
 
-4. Plusieurs objets peuvent partager la même combinaison {`id`, `class`} s'ils représentent la même ressource
+Une collection DOIT contenir :
+- Un attribut `class` : chaîne de caractères listant la ou les classes des membres contenus
 
-## 4. Exemples
+Une collection NE DOIT PAS contenir :
+- Un attribut `id`
 
-### 4.1 Objet simple
+### 3.2 Membres
+
+Un membre DOIT contenir :
+- Un attribut `class` : chaîne de caractères définissant sa classe
+- Un attribut `id` : chaîne de caractères définissant son identifiant unique dans sa classe
+
+## 4. Contraintes
+
+1. Une collection peut déclarer plusieurs classes dans son attribut `class`
+2. Un membre ne peut déclarer qu'une seule classe dans son attribut `class`
+3. Deux membres ayant la même combinaison {`class`, `id`} représentent la même ressource
+
+## 5. Exemples
+
+### 5.1 Collection homogène
+
+```json
+{
+    "class": "article",
+    "items": [
+        {
+            "class": "article",
+            "id": "42",
+            "title": "Premier Article"
+        },
+        {
+            "class": "article",
+            "id": "57",
+            "title": "Second Article"
+        }
+    ]
+}
+```
+
+### 5.2 Collection hétérogène
+
+```json
+{
+    "class": "article comment",
+    "items": [
+        {
+            "class": "article",
+            "id": "42",
+            "title": "Un Article"
+        },
+        {
+            "class": "comment",
+            "id": "17",
+            "content": "Un Commentaire"
+        }
+    ]
+}
+```
+
+### 5.3 Membre avec références
 
 ```json
 {
     "class": "article",
     "id": "42",
-    "title": "Mon Article"
-}
-```
-
-### 4.2 Objets multiples pour la même ressource
-
-```json
-{
-    "class": "article",
-    "articles": [
-        {
-            "class": "article",
-            "id": "42",
-            "title": "Mon Article"
-        }
-    ],
-    "latest": {
-        "class": "article",
-        "id": "42",
-        "title": "Mon Article"
+    "title": "Mon Article",
+    "author": {
+        "class": "user",
+        "id": "15"
+    },
+    "comments": {
+        "class": "comment",
+        "items": [
+            {
+                "class": "comment",
+                "id": "17",
+                "content": "Premier commentaire"
+            }
+        ]
     }
-}
-```
-
-### 4.3 Normalisation des espaces
-
-```json
-// Ces objets sont équivalents après normalisation
-{
-    "class": "article   comment",
-    "id": "42"
-}
-{
-    "class": " article comment ",
-    "id": "42"
-}
-{
-    "class": "article comment",
-    "id": "42"
 }
 ```
