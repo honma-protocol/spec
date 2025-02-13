@@ -28,6 +28,7 @@ Pour un membre : définit sa catégorie unique.
 ### Identité
 
 L'identité d'une ressource est définie selon son type :
+
 1. Pour un membre : la combinaison stricte {`class`, `id`}
 2. Pour une collection : son URI uniquement
 
