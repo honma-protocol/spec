@@ -1,8 +1,9 @@
-# Spécification ClassID-JSON
+# Spécification SCION
+(Structured Class Identity Object Notation)
 
 ## 1. Définition
 
-ClassID-JSON est une extension de JSON permettant d'identifier et de catégoriser des ressources via les attributs `class` et `id`.
+SCION est une extension de JSON permettant d'identifier et de catégoriser des ressources via les attributs `class` et `id`.
 
 ## 2. Types de Ressources
 
