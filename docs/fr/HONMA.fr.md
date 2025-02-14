@@ -2,12 +2,13 @@
 
 ## 1. Introduction
 
-HONMA est un protocole applicatif pour la conception d'APIs Web reposant sur quatre protocoles :
+HONMA est un protocole applicatif pour la conception d'APIs Web reposant sur cinq protocoles :
 
 1. HTTP et l'architecture REST
-2. EWLP (Extended Web Linking Protocol) pour la navigation et l'identification des ressources
-3. SCION (Structured Class Identity Object Notation) pour la représentation des données
-4. RAPID (Resource API Protocol for Introspection and Discovery) pour l'introspection
+2. RRP (Resource Representation Protocol) pour la structuration des ressources
+3. EWLP (Extended Web Linking Protocol) pour la navigation et l'identification des ressources
+4. SCION (Structured Class Identity Object Notation) pour la représentation des données
+5. RAPID (Resource API Protocol for Introspection and Discovery) pour l'introspection
 
 ## 2. Représentation des Ressources
 
@@ -18,23 +19,11 @@ HONMA est un protocole applicatif pour la conception d'APIs Web reposant sur qua
   - `application/json`
   - `application/vnd.honma+json`
 
-### 2.2 Structure
+### 2.2 Implémentation RRP
 
-1. Une représentation de ressource est soit une collection, soit un membre
-2. Une collection DOIT être représentée comme un tableau JSON (array)
-3. Un membre DOIT être représenté comme un objet JSON (hash)
-
-## 3. URI et Convention de Nommage
-
-### 3.1 Collections
-
-- Les URI de collection DEVRAIENT se terminer par un slash
-- Exemple : `/articles/`, `/users/`, `/comments/`
-
-### 3.2 Membres
-
-- Les URI de membre NE DEVRAIENT PAS se terminer par un slash
-- Exemple : `/articles/42`, `/users/15`, `/comments/7`
+Les ressources suivent la spécification RRP avec les contraintes supplémentaires suivantes :
+- Une collection DOIT être représentée comme un tableau JSON (array)
+- Un membre DOIT être représenté comme un objet JSON (hash)
 
 ## 4. Interactions
 

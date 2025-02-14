@@ -1,5 +1,4 @@
-# Spécification SCION
-(Structured Class Identity Object Notation)
+# Spécification SCION (Structured Class Identity Object Notation)
 
 ## 1. Définition
 
@@ -9,104 +8,71 @@ SCION est une extension de JSON permettant d'identifier et de catégoriser des r
 
 ### 2.1 Collection
 
-Une ressource regroupant zéro, un ou plusieurs membres. Une collection peut contenir :
-- Des membres d'une même classe (collection homogène)
-- Des membres de classes différentes (collection hétérogène)
+Un tableau JSON contenant zéro, un ou plusieurs membres. Une collection est toujours homogène : tous ses membres sont de la même classe.
 
 ### 2.2 Membre
 
-Une ressource individuelle appartenant à une classe spécifique.
+Un objet JSON pouvant appartenir à une classe spécifique. Un membre est identifié de manière unique par son attribut `id` au sein d'une même classe.
 
 ## 3. Structure
 
 ### 3.1 Collections
 
-Une collection DOIT contenir :
-- Un attribut `class` : chaîne de caractères listant la ou les classes des membres contenus
-
-Une collection NE DOIT PAS contenir :
-- Un attribut `id`
+Une collection :
+- DOIT être un tableau JSON (`array`)
+- NE PEUT PAS avoir d'attributs propres
 
 ### 3.2 Membres
 
-Un membre DOIT contenir :
-- Un attribut `class` : chaîne de caractères définissant sa classe
-- Un attribut `id` : chaîne de caractères définissant son identifiant unique dans sa classe
+Un membre :
+- DOIT être un objet JSON (`object`)
+- DOIT avoir un attribut `id`
+- L'attribut `class` est RECOMMANDÉ
 
-## 4. Contraintes
+## 4. Exemples
 
-1. Une collection peut déclarer plusieurs classes dans son attribut `class`
-2. Un membre ne peut déclarer qu'une seule classe dans son attribut `class`
-3. Deux membres ayant la même combinaison {`class`, `id`} représentent la même ressource
-
-## 5. Exemples
-
-### 5.1 Collection homogène
+### 4.1 Collection d'articles
 
 ```json
-{
-    "class": "article",
-    "items": [
-        {
-            "class": "article",
-            "id": "42",
-            "title": "First Article",
-            "summary": "An interesting article..."
-        },
-        {
-            "class": "article",
-            "id": "57",
-            "title": "Second Article",
-            "summary": "Another fascinating article..."
-        }
-    ]
-}
+[
+    {
+        "class": "article",
+        "id": "42",
+        "title": "Premier Article",
+        "summary": "Un article intéressant..."
+    },
+    {
+        "class": "article",
+        "id": "57",
+        "title": "Second Article",
+        "summary": "Un autre article fascinant..."
+    }
+]
 ```
 
-### 5.2 Collection hétérogène
+### 4.2 Collection minimale
 
 ```json
-{
-    "class": "article comment",
-    "items": [
-        {
-            "class": "article",
-            "id": "42",
-            "title": "An Article",
-            "summary": "Article content..."
-        },
-        {
-            "class": "comment",
-            "id": "17",
-            "content": "A Comment",
-            "date": "2024-02-13"
-        }
-    ]
-}
+[
+    {
+        "id": "42",
+        "title": "Un Article",
+        "summary": "Contenu de l'article..."
+    }
+]
 ```
 
-### 5.3 Membre avec références
+### 4.3 Membre avec références
 
 ```json
 {
     "class": "article",
     "id": "42",
-    "title": "My Article",
-    "content": "The article content...",
+    "title": "Mon Article",
+    "content": "Le contenu de l'article...",
     "author": {
         "class": "user",
         "id": "15"
-    },
-    "comments": {
-        "class": "comment",
-        "items": [
-            {
-                "class": "comment",
-                "id": "17",
-                "content": "First comment",
-                "date": "2024-02-13"
-            }
-        ]
     }
 }
 ```
