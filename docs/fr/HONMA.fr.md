@@ -25,6 +25,45 @@ Les ressources suivent la spécification RRP avec les contraintes supplémentair
 - Une collection DOIT être représentée comme un tableau JSON (array)
 - Un membre DOIT être représenté comme un objet JSON (hash)
 
+## 3. Gestion des Erreurs
+
+La gestion des erreurs dans HONMA suit la spécification RFC 9457 (Problem Details for HTTP APIs).
+
+### 3.1 Format des Erreurs
+
+Les réponses d'erreur DOIVENT :
+- Utiliser le type MIME `application/problem+json`
+- Contenir un objet JSON respectant la structure Problem Details
+- Inclure au minimum les champs obligatoires selon RFC 9457
+
+### 3.2 Structure de l'Erreur
+
+Chaque erreur DOIT inclure :
+- Un attribut `type` : URI identifiant le type d'erreur
+- Un attribut `title` : Description courte et lisible du problème
+- Un attribut `status` : Code HTTP de l'erreur (doit correspondre au code de la réponse HTTP)
+
+Les champs optionnels suivants PEUVENT être inclus :
+- `detail` : Explication détaillée spécifique à cette occurrence
+- `instance` : URI identifiant l'occurrence spécifique de l'erreur
+
+### 3.3 Exemples d'Erreurs
+
+```http
+HTTP/1.1 403 Forbidden
+Content-Type: application/problem+json
+Content-Language: fr
+
+{
+  "type": "https://api.example.com/problems/insufficient-credit",
+  "title": "Crédit insuffisant",
+  "status": 403,
+  "detail": "Votre solde actuel est de 30€, mais cette opération nécessite 50€",
+  "instance": "/transactions/12345",
+  "balance": 30
+}
+```
+
 ## 4. Interactions
 
 ### 4.1 Négociation de Contenu
